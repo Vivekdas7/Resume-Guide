@@ -3,33 +3,22 @@ import { ResumeEditor } from "@/components/ResumeEditor";
 import { ResumePreview } from "@/components/ResumePreview";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import { Card, CardContent } from "@/components/ui/card";
+import { templates } from "@/lib/templates";
 
 const Index = () => {
   const { toast } = useToast();
-  const [resumeData, setResumeData] = useState({
-    personalInfo: {
-      fullName: "",
-      email: "",
-      phone: "",
-    },
-    summary: "",
-    experience: [
-      {
-        company: "",
-        position: "",
-        duration: "",
-        description: "",
-      },
-    ],
-    education: [
-      {
-        institution: "",
-        degree: "",
-        year: "",
-      },
-    ],
-    skills: [],
-  });
+  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
+  const [resumeData, setResumeData] = useState(templates.modern);
+
+  const handleTemplateSelect = (templateId: string) => {
+    setSelectedTemplate(templateId);
+    setResumeData(templates[templateId]);
+    toast({
+      title: "Template Selected",
+      description: "You can now customize your resume.",
+    });
+  };
 
   const handleChange = (section: string, field: string, value: string) => {
     setResumeData((prev) => {
@@ -62,10 +51,55 @@ const Index = () => {
     });
   };
 
+  if (!selectedTemplate) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <header className="bg-primary text-white py-12">
+          <div className="container mx-auto text-center">
+            <h1 className="text-4xl font-bold mb-4">Professional Resume Builder</h1>
+            <p className="text-xl">Choose a template to get started</p>
+          </div>
+        </header>
+        
+        <div className="container mx-auto py-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {Object.entries(templates).map(([id, template]) => (
+              <Card key={id} className="hover:shadow-lg transition-shadow">
+                <CardContent className="p-6">
+                  <div className="aspect-w-8 aspect-h-11 mb-4">
+                    <div className="w-full h-64 bg-white border rounded-lg overflow-hidden shadow-sm">
+                      <ResumePreview data={template} />
+                    </div>
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2 capitalize">{id} Template</h3>
+                  <p className="text-gray-600 mb-4">Professional and clean design suitable for all industries</p>
+                  <Button 
+                    className="w-full"
+                    onClick={() => handleTemplateSelect(id)}
+                  >
+                    Use This Template
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="bg-primary text-white p-6">
-        <h1 className="text-2xl font-bold">Resume Builder</h1>
+        <div className="container mx-auto flex justify-between items-center">
+          <h1 className="text-2xl font-bold">Resume Builder</h1>
+          <Button
+            variant="secondary"
+            onClick={() => setSelectedTemplate(null)}
+          >
+            Choose Different Template
+          </Button>
+        </div>
       </header>
       
       <div className="container mx-auto py-6">
