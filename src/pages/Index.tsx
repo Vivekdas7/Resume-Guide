@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ResumeEditor } from "@/components/ResumeEditor";
-import {ResumePreview } from "@/components/ResumePreview";
+import { ResumePreview } from "@/components/ResumePreview";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,7 +10,7 @@ import { ArrowRight } from "lucide-react";
 const Index = () => {
   const { toast } = useToast();
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
-  const [resumeData, setResumeData] = useState(templates.modern);
+  const [resumeData, setResumeData] = useState(templates.split);
 
   const handleTemplateSelect = (templateId: string) => {
     setSelectedTemplate(templateId);
@@ -21,11 +21,11 @@ const Index = () => {
     });
   };
 
-  const handleChange = (section: string, field: string, value: string) => {
+  const handleChange = (section: string, field: string, value: any) => {
     setResumeData((prev) => {
       const newData = { ...prev };
       if (section === "skills" && field === "list") {
-        newData.skills = value.split(",").map((skill) => skill.trim());
+        newData.skills = value.split(",").map((skill: string) => skill.trim());
       } else if (field.includes(".")) {
         const [index, key] = field.split(".");
         newData[section][index][key] = value;
@@ -87,7 +87,7 @@ const Index = () => {
                 <CardContent className="p-6 bg-white bg-opacity-90 rounded-lg backdrop-blur-sm">
                   <div className="aspect-w-8 aspect-h-11 mb-4 bg-gray-50 rounded-lg overflow-hidden">
                     <div className="transform group-hover:scale-105 transition-transform duration-300">
-                      <ResumePreview data={template} />
+                      <ResumePreview data={template} templateName={id} />
                     </div>
                   </div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-2 capitalize">{id} Template</h3>
@@ -161,7 +161,7 @@ const Index = () => {
               <h2 className="text-2xl font-semibold">Preview</h2>
             </div>
             <div className="overflow-auto max-h-[800px] p-4">
-              <ResumePreview data={resumeData} />
+              <ResumePreview data={resumeData} templateName={selectedTemplate || 'split'} />
             </div>
           </div>
         </div>
