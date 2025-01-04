@@ -9,11 +9,37 @@ export const ResumeEditor = ({ data, onChange }: {
   data: any;
   onChange: (section: string, field: string, value: string) => void;
 }) => {
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        onChange("photo", "url", reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="space-y-6 p-6">
       <Card className="p-4">
         <h2 className="text-xl font-semibold mb-4">Personal Information</h2>
         <div className="space-y-4">
+          <div>
+            <Label htmlFor="photo">Photo</Label>
+            <Input
+              id="photo"
+              type="file"
+              accept="image/*"
+              onChange={handlePhotoChange}
+              className="mt-1"
+            />
+            {data.photo && (
+              <div className="mt-2">
+                <img src={data.photo} alt="Preview" className="w-24 h-24 object-cover rounded" />
+              </div>
+            )}
+          </div>
           <div>
             <Label htmlFor="fullName">Full Name</Label>
             <Input
@@ -40,6 +66,15 @@ export const ResumeEditor = ({ data, onChange }: {
               value={data.personalInfo.phone}
               onChange={(e) => onChange("personalInfo", "phone", e.target.value)}
               placeholder="+1 234 567 890"
+            />
+          </div>
+          <div>
+            <Label htmlFor="location">Location</Label>
+            <Input
+              id="location"
+              value={data.personalInfo.location}
+              onChange={(e) => onChange("personalInfo", "location", e.target.value)}
+              placeholder="City, Country"
             />
           </div>
         </div>

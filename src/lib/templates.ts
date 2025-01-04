@@ -1,11 +1,13 @@
 export const templates = {
   modern: {
+    photo: "",
     personalInfo: {
       fullName: "John Doe",
       email: "john@example.com",
       phone: "+1 234 567 890",
+      location: "New York, USA"
     },
-    summary: "Experienced professional with a track record of success in project management and team leadership. Skilled in developing and implementing strategic initiatives that drive business growth.",
+    summary: "Experienced professional with a track record of success in project management and team leadership.",
     experience: [
       {
         company: "Tech Solutions Inc.",
@@ -21,126 +23,136 @@ export const templates = {
         year: "2016",
       },
     ],
-    skills: ["Project Management", "Team Leadership", "Strategic Planning", "Agile Methodologies", "Stakeholder Management"],
+    skills: ["Project Management", "Team Leadership", "Strategic Planning", "Agile Methodologies"],
   },
-  minimal: {
+  creative: {
+    photo: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&q=80",
     personalInfo: {
       fullName: "Sarah Smith",
-      email: "sarah@example.com",
+      email: "sarah@creative.studio",
       phone: "+1 987 654 321",
+      location: "Los Angeles, USA"
     },
-    summary: "Creative and detail-oriented designer with expertise in user interface and brand identity development. Passionate about creating meaningful and impactful digital experiences.",
+    summary: "Creative director with a passion for innovative design solutions and brand storytelling.",
     experience: [
       {
-        company: "Creative Design Studio",
-        position: "UI/UX Designer",
+        company: "Creative Studio",
+        position: "Art Director",
         duration: "2019 - Present",
-        description: "Design and implement user interfaces for web and mobile applications. Collaborate with clients to understand requirements and deliver solutions.",
+        description: "Leading creative direction for major brand campaigns and digital experiences.",
       },
     ],
     education: [
       {
         institution: "Design Institute",
-        degree: "Bachelor of Fine Arts in Digital Design",
-        year: "2019",
+        degree: "Master of Fine Arts",
+        year: "2018",
       },
     ],
-    skills: ["UI/UX Design", "Adobe Creative Suite", "Figma", "User Research", "Prototyping"],
+    skills: ["Creative Direction", "Brand Strategy", "UI/UX Design", "Team Leadership"],
   },
-  professional: {
+  minimalist: {
+    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80",
     personalInfo: {
-      fullName: "Michael Johnson",
-      email: "michael@example.com",
+      fullName: "David Chen",
+      email: "david@minimalist.co",
       phone: "+1 456 789 012",
+      location: "San Francisco, USA"
     },
-    summary: "Results-driven marketing professional with over 8 years of experience in digital marketing and brand development. Proven track record of developing and executing successful marketing campaigns.",
+    summary: "Software architect focusing on scalable solutions and clean code practices.",
     experience: [
       {
-        company: "Global Marketing Agency",
-        position: "Marketing Director",
+        company: "Tech Innovators",
+        position: "Lead Developer",
         duration: "2018 - Present",
-        description: "Develop and implement comprehensive marketing strategies. Lead a team of marketing professionals in executing campaigns across multiple channels.",
+        description: "Architecting and implementing enterprise-level software solutions.",
       },
     ],
     education: [
       {
-        institution: "Business School",
-        degree: "Master of Business Administration",
-        year: "2015",
+        institution: "Stanford University",
+        degree: "Master of Computer Science",
+        year: "2017",
       },
     ],
-    skills: ["Digital Marketing", "Brand Development", "Team Management", "Marketing Strategy", "Analytics"],
+    skills: ["Software Architecture", "Cloud Computing", "System Design", "Team Mentoring"],
   },
-  executive: {
+  elegant: {
+    photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80",
     personalInfo: {
-      fullName: "Alexandra Chen",
-      email: "alexandra@example.com",
-      phone: "+1 789 012 345",
+      fullName: "Emma Williams",
+      email: "emma@elegant.com",
+      phone: "+1 234 567 890",
+      location: "London, UK"
     },
-    summary: "Strategic executive leader with 15+ years of experience driving organizational growth and innovation. Proven track record of building high-performing teams and delivering exceptional business results.",
+    summary: "Marketing executive with expertise in digital transformation and brand development.",
     experience: [
       {
-        company: "Global Innovations Corp",
-        position: "Chief Operating Officer",
+        company: "Global Marketing",
+        position: "Marketing Director",
         duration: "2017 - Present",
-        description: "Spearhead operational excellence initiatives resulting in 40% efficiency improvement. Lead digital transformation projects across multiple business units.",
+        description: "Developing and executing comprehensive marketing strategies for Fortune 500 clients.",
+      },
+    ],
+    education: [
+      {
+        institution: "Oxford University",
+        degree: "MBA in Marketing",
+        year: "2016",
+      },
+    ],
+    skills: ["Digital Marketing", "Brand Development", "Strategic Planning", "Team Management"],
+  },
+  professional: {
+    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80",
+    personalInfo: {
+      fullName: "Michael Johnson",
+      email: "michael@professional.org",
+      phone: "+1 345 678 901",
+      location: "Chicago, USA"
+    },
+    summary: "Senior executive with proven track record in business development and strategic leadership.",
+    experience: [
+      {
+        company: "Business Solutions",
+        position: "CEO",
+        duration: "2016 - Present",
+        description: "Leading company strategy and growth initiatives, achieving 200% revenue growth.",
       },
     ],
     education: [
       {
         institution: "Harvard Business School",
         degree: "Executive MBA",
-        year: "2012",
+        year: "2015",
       },
     ],
-    skills: ["Executive Leadership", "Strategic Planning", "Digital Transformation", "Change Management", "Business Development"],
+    skills: ["Executive Leadership", "Strategic Planning", "Business Development", "Change Management"],
   },
-  creative: {
+  modern2: {
+    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&q=80",
     personalInfo: {
-      fullName: "Lucas Rivera",
-      email: "lucas@example.com",
-      phone: "+1 234 901 678",
-    },
-    summary: "Award-winning creative director with a passion for storytelling and brand innovation. Expertise in leading creative teams and developing compelling visual narratives that resonate with audiences.",
-    experience: [
-      {
-        company: "Creative Minds Agency",
-        position: "Creative Director",
-        duration: "2019 - Present",
-        description: "Direct creative vision for major brand campaigns. Lead a team of designers, copywriters, and artists in delivering innovative creative solutions.",
-      },
-    ],
-    education: [
-      {
-        institution: "School of Visual Arts",
-        degree: "BFA in Graphic Design",
-        year: "2014",
-      },
-    ],
-    skills: ["Creative Direction", "Brand Strategy", "Visual Design", "Team Leadership", "Art Direction"],
-  },
-  technical: {
-    personalInfo: {
-      fullName: "Emma Watson",
-      email: "emma@example.com",
+      fullName: "Alex Rodriguez",
+      email: "alex@modern.tech",
       phone: "+1 567 890 123",
+      location: "Miami, USA"
     },
-    summary: "Senior software engineer with expertise in full-stack development and cloud architecture. Passionate about building scalable solutions and mentoring junior developers.",
+    summary: "Technology consultant specializing in digital transformation and innovation strategy.",
     experience: [
       {
-        company: "Tech Innovators Ltd",
-        position: "Senior Software Engineer",
-        duration: "2018 - Present",
-        description: "Lead development of cloud-native applications using microservices architecture. Implement CI/CD pipelines and DevOps practices.",
+        company: "Digital Innovators",
+        position: "Principal Consultant",
+        duration: "2019 - Present",
+        description: "Advising Fortune 500 companies on digital transformation initiatives.",
       },
     ],
     education: [
       {
         institution: "MIT",
-        degree: "Master of Science in Computer Science",
-        year: "2017",
+        degree: "MS in Technology Management",
+        year: "2018",
       },
     ],
-    skills: ["Full Stack Development", "Cloud Architecture", "DevOps", "System Design", "Technical Leadership"],
-  }
+    skills: ["Digital Transformation", "Innovation Strategy", "Technology Consulting", "Leadership"],
+  },
 };
