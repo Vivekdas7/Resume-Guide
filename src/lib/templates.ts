@@ -71,4 +71,76 @@ export const templates = {
     ],
     skills: ["Digital Marketing", "Brand Development", "Team Management", "Marketing Strategy", "Analytics"],
   },
+  executive: {
+    personalInfo: {
+      fullName: "Alexandra Chen",
+      email: "alexandra@example.com",
+      phone: "+1 789 012 345",
+    },
+    summary: "Strategic executive leader with 15+ years of experience driving organizational growth and innovation. Proven track record of building high-performing teams and delivering exceptional business results.",
+    experience: [
+      {
+        company: "Global Innovations Corp",
+        position: "Chief Operating Officer",
+        duration: "2017 - Present",
+        description: "Spearhead operational excellence initiatives resulting in 40% efficiency improvement. Lead digital transformation projects across multiple business units.",
+      },
+    ],
+    education: [
+      {
+        institution: "Harvard Business School",
+        degree: "Executive MBA",
+        year: "2012",
+      },
+    ],
+    skills: ["Executive Leadership", "Strategic Planning", "Digital Transformation", "Change Management", "Business Development"],
+  },
+  creative: {
+    personalInfo: {
+      fullName: "Lucas Rivera",
+      email: "lucas@example.com",
+      phone: "+1 234 901 678",
+    },
+    summary: "Award-winning creative director with a passion for storytelling and brand innovation. Expertise in leading creative teams and developing compelling visual narratives that resonate with audiences.",
+    experience: [
+      {
+        company: "Creative Minds Agency",
+        position: "Creative Director",
+        duration: "2019 - Present",
+        description: "Direct creative vision for major brand campaigns. Lead a team of designers, copywriters, and artists in delivering innovative creative solutions.",
+      },
+    ],
+    education: [
+      {
+        institution: "School of Visual Arts",
+        degree: "BFA in Graphic Design",
+        year: "2014",
+      },
+    ],
+    skills: ["Creative Direction", "Brand Strategy", "Visual Design", "Team Leadership", "Art Direction"],
+  },
+  technical: {
+    personalInfo: {
+      fullName: "Emma Watson",
+      email: "emma@example.com",
+      phone: "+1 567 890 123",
+    },
+    summary: "Senior software engineer with expertise in full-stack development and cloud architecture. Passionate about building scalable solutions and mentoring junior developers.",
+    experience: [
+      {
+        company: "Tech Innovators Ltd",
+        position: "Senior Software Engineer",
+        duration: "2018 - Present",
+        description: "Lead development of cloud-native applications using microservices architecture. Implement CI/CD pipelines and DevOps practices.",
+      },
+    ],
+    education: [
+      {
+        institution: "MIT",
+        degree: "Master of Science in Computer Science",
+        year: "2017",
+      },
+    ],
+    skills: ["Full Stack Development", "Cloud Architecture", "DevOps", "System Design", "Technical Leadership"],
+  }
 };
