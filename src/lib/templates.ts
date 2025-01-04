@@ -1,6 +1,5 @@
 export const templates = {
-  modern: {
-    photo: "",
+  simple: {
     personalInfo: {
       fullName: "John Doe",
       email: "john@example.com",
@@ -51,7 +50,7 @@ export const templates = {
     ],
     skills: ["Software Architecture", "Cloud Computing", "System Design", "Team Leadership"],
   },
-  sidebar: {
+  modern: {
     photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80",
     personalInfo: {
       fullName: "Emma Williams",
@@ -77,7 +76,7 @@ export const templates = {
     ],
     skills: ["Digital Marketing", "Brand Strategy", "Team Management", "Analytics"],
   },
-  compact: {
+  creative: {
     photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80",
     personalInfo: {
       fullName: "Michael Johnson",
