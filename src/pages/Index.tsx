@@ -962,7 +962,7 @@ const Index = () => {
             <div className="container mx-auto">
               <div className="flex items-center justify-center gap-4">
                 <div className="relative overflow-hidden w-full">
-                  <div className="animate-marquee whitespace-nowrap flex items-center gap-8">
+                  <div className="animate-marquee whitespace-nowrap flex items-center gap-8 flex-shrink-0">
                     <span className="text-white flex items-center gap-2">
                       <span className="bg-green-500 text-white px-2 py-0.5 rounded text-sm font-medium">NEW</span>
                       Join our WhatsApp group for daily job updates and career tips! 
