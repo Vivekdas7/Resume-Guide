@@ -8,10 +8,7 @@ import { toast } from "sonner";
 import * as pdfjsLib from 'pdfjs-dist';
 
 // Update worker configuration
-pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.js',
-  import.meta.url
-).toString();
+pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
 // Define keyword sets for different profiles
 const PROFILE_KEYWORDS = {
