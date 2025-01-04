@@ -798,12 +798,11 @@ const Index = () => {
                 title: "Welcome to ResumeGuide! 🎉",
                 description: "Let's create your professional resume together.",
                 duration: 5000,
-                position: "top-center",
                 className: "bg-gradient-to-r from-blue-500 to-indigo-500 text-white",
                 style: {
                   animation: "slideIn 0.5s ease-out",
                 },
-                type: "success",
+                type: "foreground",
               });
             }}
           >
@@ -845,12 +844,11 @@ const Index = () => {
                         title: "Welcome to ResumeGuide! 🎉",
                         description: "Let's create your professional resume together.",
                         duration: 5000,
-                        position: "top-center",
                         className: "bg-gradient-to-r from-blue-500 to-indigo-500 text-white",
                         style: {
                           animation: "slideIn 0.5s ease-out",
                         },
-                        type: "success",
+                        type: "foreground",
                       });
                     }}
               >

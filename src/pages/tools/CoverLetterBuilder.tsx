@@ -181,12 +181,11 @@ ${data.name || '[Your Name]'}`
 
   const handleCopyToClipboard = () => {
     navigator.clipboard.writeText(generatedLetter).then(() => {
-      toast.success("Cover letter copied!", {
+      toast("Cover letter copied! 📋", {
         description: "Your cover letter has been copied to clipboard",
         duration: 3000,
         className: "bg-white",
         position: "bottom-center",
-        icon: "📋",
         style: {
           border: "1px solid #e2e8f0",
           padding: "16px",
@@ -220,7 +219,7 @@ ${data.name || '[Your Name]'}`
       const letter = LETTER_TEMPLATES[templateIndex](formData);
       setGeneratedLetter(letter);
       setIsGenerating(false);
-      toast.success("New version generated!", {
+      toast("New version generated! ✨", {
         description: "Try different versions until you find the perfect one",
       });
     }, 1500);
