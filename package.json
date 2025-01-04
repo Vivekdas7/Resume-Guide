@@ -8,7 +8,9 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
-    "postinstall": "npm run build"
+    "postinstall": "npm run build",
+    "vercel-build": "vite build",
+    "start": "vite preview"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
