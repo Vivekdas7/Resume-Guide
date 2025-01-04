@@ -2,132 +2,284 @@ import React from "react";
 
 const getTemplateStyles = (templateName: string) => {
   const baseStyles = {
-    modern: {
-      container: "bg-white p-8 shadow-lg min-h-full",
-      header: "border-b-2 border-primary pb-4 mb-6",
-      name: "text-3xl font-bold text-primary",
+    split: {
+      container: "grid grid-cols-2 bg-white min-h-full",
+      leftPanel: "bg-blue-900 text-white p-8",
+      rightPanel: "p-8",
+      photo: "w-48 h-48 rounded-full mx-auto mb-6 border-4 border-white",
+      name: "text-3xl font-bold text-white mb-4",
       section: "mb-6",
-      sectionTitle: "text-xl font-semibold text-primary mb-4",
-      company: "text-accent font-medium",
-      skills: "bg-secondary px-3 py-1 rounded-full text-sm text-gray-700",
+      sectionTitle: "text-xl font-semibold mb-3 text-blue-200",
+      company: "font-medium text-blue-200",
+      skills: "bg-blue-800 px-3 py-1 rounded text-sm text-white",
     },
-    creative: {
-      container: "bg-gradient-to-br from-purple-50 to-pink-50 p-8 shadow-xl min-h-full",
-      header: "flex items-center gap-6 mb-8",
-      photo: "w-32 h-32 rounded-full border-4 border-purple-200 shadow-lg",
-      name: "text-4xl font-extrabold bg-gradient-to-r from-purple-600 to-pink-600 text-transparent bg-clip-text",
+    sidebar: {
+      container: "grid grid-cols-3 bg-gray-50 min-h-full",
+      sidebar: "bg-gray-900 text-white p-6 col-span-1",
+      content: "col-span-2 p-8",
+      photo: "w-full aspect-square rounded-lg mb-6 object-cover",
+      name: "text-2xl font-bold mb-4",
       section: "mb-8",
-      sectionTitle: "text-2xl font-bold text-purple-600 mb-4 flex items-center gap-2",
-      company: "text-pink-600 font-bold",
-      skills: "bg-purple-100 px-4 py-2 rounded-full text-sm text-purple-700 font-medium",
+      sectionTitle: "text-lg font-semibold text-gray-800 border-b-2 border-gray-300 pb-2 mb-4",
+      company: "text-gray-700 font-medium",
+      skills: "bg-gray-800 text-white px-3 py-1 rounded-full text-sm",
     },
-    minimalist: {
-      container: "bg-gray-50 p-8 min-h-full border-l-4 border-gray-800",
-      header: "grid grid-cols-3 gap-4 mb-8",
-      photo: "w-24 h-24 rounded-sm grayscale",
-      name: "text-3xl font-light text-gray-800 col-span-2",
-      section: "mb-6",
-      sectionTitle: "text-lg font-medium text-gray-800 uppercase tracking-wider mb-4",
+    compact: {
+      container: "max-w-3xl mx-auto bg-white p-6 shadow-lg",
+      header: "flex items-center gap-6 mb-6 pb-6 border-b",
+      photo: "w-24 h-24 rounded-lg object-cover",
+      name: "text-3xl font-bold text-gray-900",
+      section: "mb-4",
+      sectionTitle: "text-lg font-semibold text-gray-800 mb-2",
       company: "text-gray-600",
-      skills: "bg-white border border-gray-200 px-3 py-1 rounded-sm text-sm text-gray-600",
+      skills: "bg-gray-100 px-2 py-1 rounded text-sm text-gray-700",
     },
-    elegant: {
-      container: "bg-gradient-to-br from-slate-50 to-slate-100 p-8 min-h-full",
-      header: "text-center mb-8",
-      photo: "w-40 h-40 rounded-full mx-auto mb-4 border-4 border-white shadow-lg",
-      name: "text-4xl font-serif text-slate-800",
-      section: "mb-8",
-      sectionTitle: "text-xl font-serif text-slate-700 border-b border-slate-200 pb-2 mb-4",
-      company: "text-slate-600 font-medium",
-      skills: "bg-white shadow-sm px-4 py-2 rounded text-sm text-slate-600",
+    timeline: {
+      container: "bg-gradient-to-br from-purple-50 to-blue-50 p-8",
+      header: "flex items-center gap-8 mb-8",
+      photo: "w-32 h-32 rounded-full border-4 border-white shadow-lg",
+      name: "text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 text-transparent bg-clip-text",
+      section: "relative pl-8 mb-8 border-l-2 border-blue-200",
+      sectionTitle: "text-2xl font-bold text-purple-600 mb-4",
+      company: "text-blue-600 font-semibold",
+      skills: "bg-white shadow-sm px-4 py-2 rounded-full text-sm text-purple-600",
     },
-    professional: {
-      container: "bg-white p-8 shadow-md min-h-full border-t-4 border-blue-600",
-      header: "flex justify-between items-start mb-8",
-      photo: "w-28 h-28 rounded-lg shadow-md",
-      name: "text-3xl font-bold text-blue-900",
-      section: "mb-6",
-      sectionTitle: "text-xl font-bold text-blue-800 mb-4",
-      company: "text-blue-700 font-semibold",
-      skills: "bg-blue-50 px-3 py-1 rounded text-sm text-blue-700",
-    },
-    modern2: {
-      container: "bg-gradient-to-r from-teal-50 to-emerald-50 p-8 min-h-full",
-      header: "grid grid-cols-4 gap-6 mb-8",
-      photo: "w-full aspect-square rounded-lg shadow-lg col-span-1",
-      name: "text-4xl font-bold text-teal-800 col-span-3",
-      section: "mb-8",
-      sectionTitle: "text-2xl font-semibold text-emerald-700 mb-4",
-      company: "text-teal-600 font-medium",
-      skills: "bg-white/80 backdrop-blur px-4 py-2 rounded-lg text-sm text-teal-700",
-    }
   };
 
-  return baseStyles[templateName] || baseStyles.modern;
+  return baseStyles[templateName] || baseStyles.split;
 };
 
-export const ResumePreview = ({ data, templateName = "modern" }: { data: any; templateName?: string }) => {
+export const ResumePreview = ({ data, templateName = "split" }: { data: any; templateName?: string }) => {
   const styles = getTemplateStyles(templateName);
 
-  return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        {data.photo && ["creative", "minimalist", "elegant", "professional", "modern2"].includes(templateName) && (
-          <img 
-            src={data.photo} 
-            alt={data.personalInfo.fullName}
-            className={styles.photo}
-          />
-        )}
-        <div>
+  if (templateName === "split") {
+    return (
+      <div className={styles.container}>
+        <div className={styles.leftPanel}>
+          {data.photo && <img src={data.photo} alt={data.personalInfo.fullName} className={styles.photo} />}
           <h1 className={styles.name}>{data.personalInfo.fullName}</h1>
-          <div className="text-sm text-gray-600 mt-2">
-            <p>{data.personalInfo.email} | {data.personalInfo.phone}</p>
-            {data.personalInfo.location && (
-              <p className="mt-1">{data.personalInfo.location}</p>
-            )}
+          <div className="mb-6">
+            <p>{data.personalInfo.email}</p>
+            <p>{data.personalInfo.phone}</p>
+            <p>{data.personalInfo.location}</p>
+          </div>
+          <div className={styles.section}>
+            <h2 className={styles.sectionTitle}>Skills</h2>
+            <div className="flex flex-wrap gap-2">
+              {data.skills.map((skill: string, index: number) => (
+                <span key={index} className={styles.skills}>
+                  {skill.trim()}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div className={styles.rightPanel}>
+          <div className={styles.section}>
+            <h2 className={styles.sectionTitle}>Professional Summary</h2>
+            <p className="text-gray-700">{data.summary}</p>
+          </div>
+          <div className={styles.section}>
+            <h2 className={styles.sectionTitle}>Experience</h2>
+            {data.experience.map((exp: any, index: number) => (
+              <div key={index} className="mb-4">
+                <h3 className="font-semibold">{exp.position}</h3>
+                <p className={styles.company}>{exp.company}</p>
+                <p className="text-sm text-gray-600">{exp.duration}</p>
+                <p className="text-gray-700 mt-2">{exp.description}</p>
+              </div>
+            ))}
+          </div>
+          <div className={styles.section}>
+            <h2 className={styles.sectionTitle}>Education</h2>
+            {data.education.map((edu: any, index: number) => (
+              <div key={index} className="mb-4">
+                <h3 className="font-semibold">{edu.degree}</h3>
+                <p className={styles.company}>{edu.institution}</p>
+                <p className="text-sm text-gray-600">{edu.year}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
+    );
+  }
 
-      <div className={styles.section}>
-        <h2 className={styles.sectionTitle}>Professional Summary</h2>
-        <p className="text-gray-700 leading-relaxed">{data.summary}</p>
-      </div>
-
-      <div className={styles.section}>
-        <h2 className={styles.sectionTitle}>Work Experience</h2>
-        {data.experience.map((exp: any, index: number) => (
-          <div key={index} className="mb-4">
-            <h3 className="font-semibold">{exp.position}</h3>
-            <p className={styles.company}>{exp.company}</p>
-            <p className="text-sm text-gray-600">{exp.duration}</p>
-            <p className="text-gray-700 mt-2 leading-relaxed">{exp.description}</p>
+  if (templateName === "sidebar") {
+    return (
+      <div className={styles.container}>
+        <div className={styles.sidebar}>
+          {data.photo && <img src={data.photo} alt={data.personalInfo.fullName} className={styles.photo} />}
+          <h1 className={styles.name}>{data.personalInfo.fullName}</h1>
+          <div className="mb-6 text-gray-300">
+            <p>{data.personalInfo.email}</p>
+            <p>{data.personalInfo.phone}</p>
+            <p>{data.personalInfo.location}</p>
           </div>
-        ))}
-      </div>
-
-      <div className={styles.section}>
-        <h2 className={styles.sectionTitle}>Education</h2>
-        {data.education.map((edu: any, index: number) => (
-          <div key={index} className="mb-4">
-            <h3 className="font-semibold">{edu.degree}</h3>
-            <p className={styles.company}>{edu.institution}</p>
-            <p className="text-sm text-gray-600">{edu.year}</p>
+          <div className="mb-6">
+            <h2 className="text-lg font-semibold mb-3">Skills</h2>
+            <div className="flex flex-wrap gap-2">
+              {data.skills.map((skill: string, index: number) => (
+                <span key={index} className={styles.skills}>
+                  {skill.trim()}
+                </span>
+              ))}
+            </div>
           </div>
-        ))}
+        </div>
+        <div className={styles.content}>
+          <div className={styles.section}>
+            <h2 className={styles.sectionTitle}>Professional Summary</h2>
+            <p className="text-gray-700">{data.summary}</p>
+          </div>
+          <div className={styles.section}>
+            <h2 className={styles.sectionTitle}>Experience</h2>
+            {data.experience.map((exp: any, index: number) => (
+              <div key={index} className="mb-6">
+                <h3 className="font-bold text-gray-800">{exp.position}</h3>
+                <p className={styles.company}>{exp.company}</p>
+                <p className="text-sm text-gray-600">{exp.duration}</p>
+                <p className="text-gray-700 mt-2">{exp.description}</p>
+              </div>
+            ))}
+          </div>
+          <div className={styles.section}>
+            <h2 className={styles.sectionTitle}>Education</h2>
+            {data.education.map((edu: any, index: number) => (
+              <div key={index} className="mb-4">
+                <h3 className="font-bold text-gray-800">{edu.degree}</h3>
+                <p className={styles.company}>{edu.institution}</p>
+                <p className="text-sm text-gray-600">{edu.year}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
+    );
+  }
 
-      <div>
-        <h2 className={styles.sectionTitle}>Skills</h2>
-        <div className="flex flex-wrap gap-2">
-          {data.skills.map((skill: string, index: number) => (
-            <span key={index} className={styles.skills}>
-              {skill.trim()}
-            </span>
+  if (templateName === "compact") {
+    return (
+      <div className={styles.container}>
+        <div className={styles.header}>
+          {data.photo && <img src={data.photo} alt={data.personalInfo.fullName} className={styles.photo} />}
+          <div>
+            <h1 className={styles.name}>{data.personalInfo.fullName}</h1>
+            <div className="text-gray-600">
+              <p>{data.personalInfo.email} | {data.personalInfo.phone}</p>
+              <p>{data.personalInfo.location}</p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-3 gap-6">
+          <div className="col-span-2">
+            <div className={styles.section}>
+              <h2 className={styles.sectionTitle}>Professional Summary</h2>
+              <p className="text-gray-700">{data.summary}</p>
+            </div>
+            
+            <div className={styles.section}>
+              <h2 className={styles.sectionTitle}>Experience</h2>
+              {data.experience.map((exp: any, index: number) => (
+                <div key={index} className="mb-4">
+                  <div className="flex justify-between items-start">
+                    <h3 className="font-semibold">{exp.position}</h3>
+                    <span className="text-sm text-gray-600">{exp.duration}</span>
+                  </div>
+                  <p className={styles.company}>{exp.company}</p>
+                  <p className="text-gray-700 mt-1">{exp.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          <div>
+            <div className={styles.section}>
+              <h2 className={styles.sectionTitle}>Education</h2>
+              {data.education.map((edu: any, index: number) => (
+                <div key={index} className="mb-3">
+                  <h3 className="font-semibold">{edu.degree}</h3>
+                  <p className={styles.company}>{edu.institution}</p>
+                  <p className="text-sm text-gray-600">{edu.year}</p>
+                </div>
+              ))}
+            </div>
+            
+            <div className={styles.section}>
+              <h2 className={styles.sectionTitle}>Skills</h2>
+              <div className="flex flex-wrap gap-2">
+                {data.skills.map((skill: string, index: number) => (
+                  <span key={index} className={styles.skills}>
+                    {skill.trim()}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (templateName === "timeline") {
+    return (
+      <div className={styles.container}>
+        <div className={styles.header}>
+          {data.photo && <img src={data.photo} alt={data.personalInfo.fullName} className={styles.photo} />}
+          <div>
+            <h1 className={styles.name}>{data.personalInfo.fullName}</h1>
+            <div className="text-gray-600 mt-2">
+              <p>{data.personalInfo.email} | {data.personalInfo.phone}</p>
+              <p>{data.personalInfo.location}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.section}>
+          <h2 className={styles.sectionTitle}>Professional Summary</h2>
+          <p className="text-gray-700">{data.summary}</p>
+        </div>
+
+        <div className={styles.section}>
+          <h2 className={styles.sectionTitle}>Experience</h2>
+          {data.experience.map((exp: any, index: number) => (
+            <div key={index} className="mb-6 relative">
+              <div className="absolute -left-10 top-0 w-4 h-4 bg-purple-600 rounded-full"></div>
+              <h3 className="font-bold text-gray-800">{exp.position}</h3>
+              <p className={styles.company}>{exp.company}</p>
+              <p className="text-sm text-gray-600">{exp.duration}</p>
+              <p className="text-gray-700 mt-2">{exp.description}</p>
+            </div>
           ))}
         </div>
+
+        <div className="grid grid-cols-2 gap-8">
+          <div>
+            <h2 className={styles.sectionTitle}>Education</h2>
+            {data.education.map((edu: any, index: number) => (
+              <div key={index} className="mb-4">
+                <h3 className="font-bold text-gray-800">{edu.degree}</h3>
+                <p className={styles.company}>{edu.institution}</p>
+                <p className="text-sm text-gray-600">{edu.year}</p>
+              </div>
+            ))}
+          </div>
+
+          <div>
+            <h2 className={styles.sectionTitle}>Skills</h2>
+            <div className="flex flex-wrap gap-2">
+              {data.skills.map((skill: string, index: number) => (
+                <span key={index} className={styles.skills}>
+                  {skill.trim()}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
+
+  return null;
 };

@@ -25,47 +25,21 @@ export const templates = {
     ],
     skills: ["Project Management", "Team Leadership", "Strategic Planning", "Agile Methodologies"],
   },
-  creative: {
-    photo: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&q=80",
-    personalInfo: {
-      fullName: "Sarah Smith",
-      email: "sarah@creative.studio",
-      phone: "+1 987 654 321",
-      location: "Los Angeles, USA"
-    },
-    summary: "Creative director with a passion for innovative design solutions and brand storytelling.",
-    experience: [
-      {
-        company: "Creative Studio",
-        position: "Art Director",
-        duration: "2019 - Present",
-        description: "Leading creative direction for major brand campaigns and digital experiences.",
-      },
-    ],
-    education: [
-      {
-        institution: "Design Institute",
-        degree: "Master of Fine Arts",
-        year: "2018",
-      },
-    ],
-    skills: ["Creative Direction", "Brand Strategy", "UI/UX Design", "Team Leadership"],
-  },
-  minimalist: {
+  split: {
     photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80",
     personalInfo: {
       fullName: "David Chen",
-      email: "david@minimalist.co",
+      email: "david@example.com",
       phone: "+1 456 789 012",
       location: "San Francisco, USA"
     },
-    summary: "Software architect focusing on scalable solutions and clean code practices.",
+    summary: "Innovative software architect with a passion for creating scalable solutions.",
     experience: [
       {
         company: "Tech Innovators",
         position: "Lead Developer",
         duration: "2018 - Present",
-        description: "Architecting and implementing enterprise-level software solutions.",
+        description: "Leading development of enterprise-level solutions.",
       },
     ],
     education: [
@@ -75,23 +49,23 @@ export const templates = {
         year: "2017",
       },
     ],
-    skills: ["Software Architecture", "Cloud Computing", "System Design", "Team Mentoring"],
+    skills: ["Software Architecture", "Cloud Computing", "System Design", "Team Leadership"],
   },
-  elegant: {
+  sidebar: {
     photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80",
     personalInfo: {
       fullName: "Emma Williams",
-      email: "emma@elegant.com",
+      email: "emma@example.com",
       phone: "+1 234 567 890",
       location: "London, UK"
     },
-    summary: "Marketing executive with expertise in digital transformation and brand development.",
+    summary: "Strategic marketing executive specializing in digital transformation.",
     experience: [
       {
         company: "Global Marketing",
         position: "Marketing Director",
         duration: "2017 - Present",
-        description: "Developing and executing comprehensive marketing strategies for Fortune 500 clients.",
+        description: "Spearheading digital marketing initiatives for Fortune 500 clients.",
       },
     ],
     education: [
@@ -101,23 +75,23 @@ export const templates = {
         year: "2016",
       },
     ],
-    skills: ["Digital Marketing", "Brand Development", "Strategic Planning", "Team Management"],
+    skills: ["Digital Marketing", "Brand Strategy", "Team Management", "Analytics"],
   },
-  professional: {
+  compact: {
     photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80",
     personalInfo: {
       fullName: "Michael Johnson",
-      email: "michael@professional.org",
+      email: "michael@example.com",
       phone: "+1 345 678 901",
       location: "Chicago, USA"
     },
-    summary: "Senior executive with proven track record in business development and strategic leadership.",
+    summary: "Results-driven executive with expertise in business development.",
     experience: [
       {
         company: "Business Solutions",
         position: "CEO",
         duration: "2016 - Present",
-        description: "Leading company strategy and growth initiatives, achieving 200% revenue growth.",
+        description: "Leading company growth and strategic initiatives.",
       },
     ],
     education: [
@@ -127,23 +101,23 @@ export const templates = {
         year: "2015",
       },
     ],
-    skills: ["Executive Leadership", "Strategic Planning", "Business Development", "Change Management"],
+    skills: ["Leadership", "Strategy", "Business Development", "Innovation"],
   },
-  modern2: {
+  timeline: {
     photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&q=80",
     personalInfo: {
       fullName: "Alex Rodriguez",
-      email: "alex@modern.tech",
+      email: "alex@example.com",
       phone: "+1 567 890 123",
       location: "Miami, USA"
     },
-    summary: "Technology consultant specializing in digital transformation and innovation strategy.",
+    summary: "Technology consultant focused on digital transformation.",
     experience: [
       {
         company: "Digital Innovators",
         position: "Principal Consultant",
         duration: "2019 - Present",
-        description: "Advising Fortune 500 companies on digital transformation initiatives.",
+        description: "Leading digital transformation initiatives.",
       },
     ],
     education: [
@@ -153,6 +127,6 @@ export const templates = {
         year: "2018",
       },
     ],
-    skills: ["Digital Transformation", "Innovation Strategy", "Technology Consulting", "Leadership"],
-  },
+    skills: ["Digital Transformation", "Innovation", "Consulting", "Leadership"],
+  }
 };
