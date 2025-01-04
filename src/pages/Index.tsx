@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ResumeEditor } from "@/components/ResumeEditor";
-import { ResumePreview } from "@/components/ResumePreview";
+import {ResumePreview } from "@/components/ResumePreview";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,7 +10,7 @@ import { ArrowRight } from "lucide-react";
 const Index = () => {
   const { toast } = useToast();
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
-  const [resumeData, setResumeData] = useState(templates.simple); // Changed from templates.modern to templates.simple
+  const [resumeData, setResumeData] = useState(templates.modern);
 
   const handleTemplateSelect = (templateId: string) => {
     setSelectedTemplate(templateId);
