@@ -2,7 +2,7 @@ import * as React from "react";
 import { useState } from "react";
 import { ResumeEditor } from "@/components/ResumeEditor";
 import { ResumePreview } from "@/components/ResumePreview";
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Card, CardContent } from "@/components/ui/card";
 import { templates } from "@/lib/templates";
