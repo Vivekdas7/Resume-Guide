@@ -9,37 +9,11 @@ export const ResumeEditor = ({ data, onChange }: {
   data: any;
   onChange: (section: string, field: string, value: string) => void;
 }) => {
-  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        onChange("photo", "url", reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   return (
     <div className="space-y-6 p-6">
       <Card className="p-4">
         <h2 className="text-xl font-semibold mb-4">Personal Information</h2>
         <div className="space-y-4">
-          <div>
-            <Label htmlFor="photo">Photo</Label>
-            <Input
-              id="photo"
-              type="file"
-              accept="image/*"
-              onChange={handlePhotoChange}
-              className="mt-1"
-            />
-            {data.photo && (
-              <div className="mt-2">
-                <img src={data.photo} alt="Preview" className="w-24 h-24 object-cover rounded" />
-              </div>
-            )}
-          </div>
           <div>
             <Label htmlFor="fullName">Full Name</Label>
             <Input
@@ -91,7 +65,47 @@ export const ResumeEditor = ({ data, onChange }: {
       </Card>
 
       <Card className="p-4">
-        <h2 className="text-xl font-semibold mb-4">Work Experience</h2>
+        <h2 className="text-xl font-semibold mb-4">Projects</h2>
+        {data.projects.map((project: any, index: number) => (
+          <div key={index} className="space-y-4 mb-6">
+            <div>
+              <Label>Project Name</Label>
+              <Input
+                value={project.name}
+                onChange={(e) => onChange("projects", `${index}.name`, e.target.value)}
+                placeholder="Project name"
+              />
+            </div>
+            <div>
+              <Label>Description</Label>
+              <Textarea
+                value={project.description}
+                onChange={(e) => onChange("projects", `${index}.description`, e.target.value)}
+                placeholder="Describe your project..."
+              />
+            </div>
+            <div>
+              <Label>Technologies Used</Label>
+              <Input
+                value={project.technologies}
+                onChange={(e) => onChange("projects", `${index}.technologies`, e.target.value)}
+                placeholder="React, Node.js, etc."
+              />
+            </div>
+            <div>
+              <Label>Link (Optional)</Label>
+              <Input
+                value={project.link}
+                onChange={(e) => onChange("projects", `${index}.link`, e.target.value)}
+                placeholder="https://..."
+              />
+            </div>
+          </div>
+        ))}
+      </Card>
+
+      <Card className="p-4">
+        <h2 className="text-xl font-semibold mb-4">Work Experience (Optional)</h2>
         {data.experience.map((exp: any, index: number) => (
           <div key={index} className="space-y-4 mb-6">
             <div>
