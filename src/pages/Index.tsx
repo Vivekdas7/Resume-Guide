@@ -24,7 +24,9 @@ const Index = () => {
   const handleChange = (section: string, field: string, value: any) => {
     setResumeData((prev) => {
       const newData = { ...prev };
-      if (section === "skills" && field === "list") {
+      if (section === "photo") {
+        newData.photo = value;
+      } else if (section === "skills" && field === "list") {
         newData.skills = value.split(",").map((skill: string) => skill.trim());
       } else if (field.includes(".")) {
         const [index, key] = field.split(".");
