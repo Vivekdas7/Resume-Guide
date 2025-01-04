@@ -15,19 +15,18 @@ export default defineConfig({
   build: {
     outDir: "dist",
     sourcemap: true,
+    assetsDir: "assets",
     rollupOptions: {
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
           pdfjs: ['pdfjs-dist']
-        }
+        },
+        entryFileNames: 'assets/[name]-[hash].js',
+        chunkFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]'
       }
     }
   },
-  // Add base URL for production
-  base: '/',
-  // Add preview configuration
-  preview: {
-    port: 3000
-  }
+  base: './'
 }); 
