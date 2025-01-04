@@ -1,12 +1,39 @@
 import * as React from "react"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { X } from "lucide-react"
+import { Spinner } from "@/components/icons"
 
 import { cn } from "@/lib/utils"
 
 const Dialog = DialogPrimitive.Root
 
-const DialogTrigger = DialogPrimitive.Trigger
+const DialogTrigger = React.forwardRef<
+  HTMLButtonElement,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Trigger> & {
+    loading?: boolean
+  }
+>(({ className, loading, children, ...props }, ref) => (
+  <DialogPrimitive.Trigger
+    ref={ref}
+    className={cn(
+      "inline-flex items-center justify-center",
+      "disabled:opacity-50 disabled:cursor-not-allowed",
+      className
+    )}
+    disabled={loading}
+    {...props}
+  >
+    {loading ? (
+      <span className="inline-flex items-center gap-2">
+        <Spinner className="h-4 w-4" />
+        Loading...
+      </span>
+    ) : (
+      children
+    )}
+  </DialogPrimitive.Trigger>
+))
+DialogTrigger.displayName = DialogPrimitive.Trigger.displayName
 
 const DialogPortal = DialogPrimitive.Portal
 

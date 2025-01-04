@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { ResumeEditor } from "@/components/ResumeEditor";
-import { ResumePreview } from "@/components/ResumePreview";
+import {ResumePreview } from "@/components/ResumePreview";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Card, CardContent } from "@/components/ui/card";
 import { templates } from "@/lib/templates";
-import { ArrowRight, Sparkles, FileText, Palette } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 const Index = () => {
   const { toast } = useToast();
@@ -54,53 +54,49 @@ const Index = () => {
 
   if (!selectedTemplate) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
-        <header className="relative bg-primary py-16 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-700 opacity-90"></div>
-          <div className="relative container mx-auto text-center px-4">
-            <h1 className="text-5xl font-bold text-white mb-6 animate-fade-in">
-              Professional Resume Builder
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-indigo-100">
+        <header className="relative bg-cover bg-center h-screen bg-animate bg-gradient-to-r from-blue-500 to-indigo-700">
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-blue-600 opacity-70"></div>
+          <div className="relative container mx-auto text-center px-4 flex flex-col justify-center items-center h-full">
+            <h1 className="text-6xl md:text-7xl font-extrabold mb-6 tracking-wide text-white animate__animated animate__fadeIn animate__delay-2s">
+              <span className="inline-block animate__animated animate__fadeIn">Craft Your Dream</span>
+              <span className="inline-block animate__animated animate__fadeIn animate__delay-4s">Resume</span>
             </h1>
-            <p className="text-xl text-gray-100 mb-8 max-w-2xl mx-auto">
-              Create stunning resumes in minutes with our easy-to-use builder and professional templates
+            <p className="text-lg md:text-2xl text-gray-200 mb-10 max-w-3xl mx-auto">
+              Transform your job applications with stunning and professional resumes that leave a lasting impression.
             </p>
-            <div className="flex justify-center gap-6 mb-12">
-              <div className="flex items-center gap-2 text-white">
-                <Sparkles className="w-5 h-5" />
-                <span>Professional Templates</span>
-              </div>
-              <div className="flex items-center gap-2 text-white">
-                <FileText className="w-5 h-5" />
-                <span>Easy Customization</span>
-              </div>
-              <div className="flex items-center gap-2 text-white">
-                <Palette className="w-5 h-5" />
-                <span>Modern Designs</span>
-              </div>
+            <div className="flex gap-6">
+              <Button className="px-8 py-3 text-lg bg-white text-blue-700 hover:bg-blue-100 transition-all ease-in-out duration-300 transform hover:scale-105">
+                Get Started
+              </Button>
+              <Button className="px-8 py-3 text-lg bg-blue-700 text-white hover:bg-blue-800 transition-all ease-in-out duration-300 transform hover:scale-105">
+                Learn More
+              </Button>
             </div>
           </div>
         </header>
-        
+
         <div className="container mx-auto py-16 px-4">
-          <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">
-            Choose Your Template
-          </h2>
+          <h2 className="text-4xl font-bold text-center mb-12 text-gray-800">Pick Your Favorite Template</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {Object.entries(templates).map(([id, template]) => (
-              <Card key={id} className="group hover:shadow-xl transition-all duration-300 overflow-hidden">
-                <CardContent className="p-6">
-                  <div className="aspect-w-8 aspect-h-11 mb-4 bg-white rounded-lg overflow-hidden shadow-sm">
+              <Card
+                key={id}
+                className="group hover:shadow-2xl transition-all duration-300 rounded-xl overflow-hidden transform hover:scale-105"
+              >
+                <CardContent className="p-6 bg-white bg-opacity-90 rounded-lg backdrop-blur-sm">
+                  <div className="aspect-w-8 aspect-h-11 mb-4 bg-gray-50 rounded-lg overflow-hidden">
                     <div className="transform group-hover:scale-105 transition-transform duration-300">
                       <ResumePreview data={template} />
                     </div>
                   </div>
-                  <h3 className="text-xl font-semibold mb-2 capitalize">{id} Template</h3>
-                  <p className="text-gray-600 mb-4">Professional and clean design suitable for all industries</p>
-                  <Button 
-                    className="w-full group"
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2 capitalize">{id} Template</h3>
+                  <p className="text-gray-600 mb-4">Sleek and professional design perfect for any job.</p>
+                  <Button
+                    className="w-full group flex items-center justify-between"
                     onClick={() => handleTemplateSelect(id)}
                   >
-                    <span>Use This Template</span>
+                    <span className="text-lg">Use This Template</span>
                     <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </CardContent>
@@ -109,62 +105,62 @@ const Index = () => {
           </div>
         </div>
 
-        <footer className="bg-gray-50 border-t py-12">
-          <div className="container mx-auto px-4 text-center text-gray-600">
-            <p>Create your professional resume today and land your dream job</p>
-          </div>
+        <footer className="bg-gray-900 text-white py-12 text-center">
+          <p className="text-sm animate__animated animate__fadeIn animate__delay-2s">
+            Crafted with ❤️ | Build your future with a resume that stands out!
+          </p>
         </footer>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-primary text-white p-6 shadow-md">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-indigo-100">
+      <header className="bg-gradient-to-r from-blue-500 to-blue-700 text-white p-6 shadow-md">
         <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Resume Builder</h1>
+          <h1 className="text-3xl font-bold">Resume Builder</h1>
           <Button
             variant="secondary"
             onClick={() => setSelectedTemplate(null)}
-            className="hover:bg-white/90 transition-colors"
+            className="hover:bg-white hover:text-blue-700 transition-all"
           >
-            Choose Different Template
+            Choose Template
           </Button>
         </div>
       </header>
-      
+
       <div className="container mx-auto py-6 px-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-            <div className="p-4 bg-secondary border-b">
-              <h2 className="text-xl font-semibold">Edit Resume</h2>
+            <div className="p-4 bg-blue-100 border-b">
+              <h2 className="text-2xl font-semibold">Edit Your Resume</h2>
             </div>
-            <div className="overflow-auto max-h-[800px]">
+            <div className="overflow-auto max-h-[800px] p-4">
               <ResumeEditor data={resumeData} onChange={handleChange} />
             </div>
-            <div className="p-4 bg-secondary border-t flex gap-4">
+            <div className="p-4 bg-blue-100 border-t flex gap-4">
               <Button
                 onClick={() => handleAddSection("experience")}
                 variant="outline"
-                className="hover:bg-primary hover:text-white transition-colors"
+                className="hover:bg-blue-500 hover:text-white transition-colors"
               >
                 Add Experience
               </Button>
               <Button
                 onClick={() => handleAddSection("education")}
                 variant="outline"
-                className="hover:bg-primary hover:text-white transition-colors"
+                className="hover:bg-blue-500 hover:text-white transition-colors"
               >
                 Add Education
               </Button>
             </div>
           </div>
-          
+
           <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-            <div className="p-4 bg-secondary border-b">
-              <h2 className="text-xl font-semibold">Preview</h2>
+            <div className="p-4 bg-blue-100 border-b">
+              <h2 className="text-2xl font-semibold">Preview</h2>
             </div>
-            <div className="overflow-auto max-h-[800px]">
+            <div className="overflow-auto max-h-[800px] p-4">
               <ResumePreview data={resumeData} />
             </div>
           </div>
