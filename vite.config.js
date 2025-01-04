@@ -14,19 +14,15 @@ export default defineConfig({
   },
   build: {
     outDir: "dist",
-    sourcemap: true,
-    assetsDir: "assets",
+    sourcemap: false,
     rollupOptions: {
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
           pdfjs: ['pdfjs-dist']
-        },
-        entryFileNames: 'assets/[name]-[hash].js',
-        chunkFileNames: 'assets/[name]-[hash].js',
-        assetFileNames: 'assets/[name]-[hash].[ext]'
+        }
       }
     }
   },
-  base: './'
+  base: '/'
 }); 
