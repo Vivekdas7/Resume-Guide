@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import * as React from "react";
+import { useState } from "react";
 import { ResumeEditor } from "@/components/ResumeEditor";
 import { ResumePreview } from "@/components/ResumePreview";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Card, CardContent } from "@/components/ui/card";
 import { templates } from "@/lib/templates";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Github, Upload, FileText, CheckCircle, XCircle, Menu, Twitter, Linkedin } from "lucide-react";
 import 'animate.css';
 import {
   NavigationMenu,
@@ -13,11 +14,12 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
-import { Github } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
-import { Upload, FileText, CheckCircle, XCircle } from "lucide-react";
+import { Link, useNavigate } from 'react-router-dom';
+import { Navbar } from '@/components/ui/Navbar';
+import { toast } from "sonner";
 
 type JobProfile = {
   title: string;
@@ -55,26 +57,35 @@ type ValidationResult = {
   error?: string;
 };
 
-// Add these helper functions at the top level
+// Add this constant after the JOB_PROFILES constant
 const RESUME_KEYWORDS = [
   // Personal Information Keywords
-  "name", "email", "phone", "address", "linkedin", "github", "portfolio",
+  "name", "email", "phone", "address", "linkedin", "github", "portfolio", "contact",
   
   // Section Headers
-  "experience", "employment", "work history", "professional experience",
-  "education", "academic", "qualification", "degree",
-  "skills", "expertise", "competencies", "technical skills",
-  "projects", "achievements", "accomplishments",
-  "summary", "objective", "profile", "about",
+  "experience", "employment", "work history", "professional experience", "career history",
+  "education", "academic", "qualification", "degree", "certification", "training",
+  "skills", "expertise", "competencies", "technical skills", "core competencies",
+  "projects", "achievements", "accomplishments", "highlights",
+  "summary", "objective", "profile", "about", "professional summary",
   
   // Common Resume Terms
-  "responsible for", "developed", "managed", "led", "created", "implemented",
-  "team", "project", "collaborated", "coordinated", "analyzed",
-  "bachelor", "master", "phd", "certification", "certificate",
-  "professional", "resume", "cv", "curriculum vitae",
+  "responsible for", "developed", "managed", "led", "created", "implemented", "achieved",
+  "team", "project", "collaborated", "coordinated", "analyzed", "improved", "increased",
+  "reduced", "delivered", "launched", "initiated", "spearheaded", "orchestrated",
+  "bachelor", "master", "phd", "certification", "certificate", "diploma", "gpa",
+  "professional", "resume", "cv", "curriculum vitae", "references",
+  
+  // Technical Terms
+  "programming", "software", "development", "engineering", "database", "api",
+  "framework", "language", "platform", "system", "architecture", "infrastructure",
+  
+  // Soft Skills
+  "leadership", "communication", "problem-solving", "analytical", "teamwork",
+  "organization", "time management", "project management", "strategic",
   
   // Date/Duration Terms
-  "present", "current", "year", "month", "-", "to"
+  "present", "current", "year", "month", "-", "to", "from", "ongoing"
 ];
 
 const validateResumeContent = (text: string): ValidationResult => {
@@ -89,45 +100,205 @@ const validateResumeContent = (text: string): ValidationResult => {
   const hasEmailPattern = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/.test(normalizedText);
   const hasPhonePattern = /(\+\d{1,3}[-.]?)?\d{3}[-.]?\d{3}[-.]?\d{4}/.test(normalizedText);
   const hasDatePattern = /(\d{4}|\d{1,2}\/\d{1,2}\/\d{2,4}|present|current)/.test(normalizedText);
+  const hasBulletPoints = /[•\-\*]/.test(text);
+  const hasURLPattern = /(http|https|www\.)[^\s]+/.test(normalizedText);
   
-  // Calculate confidence score based on multiple factors
   let confidencePoints = 0;
   
-  // Keyword matches (up to 50 points)
-  confidencePoints += (foundKeywords.length / RESUME_KEYWORDS.length) * 50;
+  // Reduce keyword match requirement (30 points max)
+  confidencePoints += (foundKeywords.length / RESUME_KEYWORDS.length) * 30;
   
-  // Common patterns (up to 30 points)
+  // Adjust pattern scoring (35 points max)
   if (hasEmailPattern) confidencePoints += 10;
   if (hasPhonePattern) confidencePoints += 10;
-  if (hasDatePattern) confidencePoints += 10;
+  if (hasDatePattern) confidencePoints += 5;
+  if (hasBulletPoints) confidencePoints += 5;
+  if (hasURLPattern) confidencePoints += 5;
   
-  // Length check (up to 20 points)
+  // Simplified length check (15 points max)
   const wordCount = normalizedText.split(/\s+/).length;
-  if (wordCount > 100) confidencePoints += 10;
-  if (wordCount > 300) confidencePoints += 10;
+  if (wordCount > 50) confidencePoints += 15;
   
-  // Section detection (additional points)
-  const hasEducationSection = /education|academic|qualification/i.test(normalizedText);
-  const hasExperienceSection = /experience|employment|work history/i.test(normalizedText);
-  const hasSkillsSection = /skills|expertise|competencies/i.test(normalizedText);
+  // More lenient section detection (20 points max)
+  const sections = [
+    /education|academic|qualification|study/i,
+    /experience|employment|work|job|career/i,
+    /skills|expertise|competencies|proficiency/i,
+    /summary|objective|profile|about/i
+  ];
   
-  if (hasEducationSection) confidencePoints += 5;
-  if (hasExperienceSection) confidencePoints += 5;
-  if (hasSkillsSection) confidencePoints += 5;
+  sections.forEach(pattern => {
+    if (pattern.test(normalizedText)) confidencePoints += 5;
+  });
 
   return {
-    isValid: confidencePoints > 40, // Require at least 40% confidence
+    isValid: confidencePoints > 35, // Lower threshold
     confidence: confidencePoints,
-    error: confidencePoints <= 40 
-      ? "This document doesn't appear to be a resume. Please ensure you're uploading a resume with standard sections like Experience, Education, and Skills."
+    error: confidencePoints <= 35 
+      ? "Please ensure your resume includes basic sections like contact information, experience, education, and skills."
       : undefined
   };
+};
+
+// Add these types near the top of the file
+interface ResumeData {
+  photo: string;
+  personalInfo: {
+    fullName: string;
+    email: string;
+    phone: string;
+    location: string;
+  };
+  summary: string;
+  experience: Array<{
+    company: string;
+    position: string;
+    duration: string;
+    description: string;
+  }>;
+  education: Array<{
+    institution: string;
+    degree: string;
+    year: string;
+  }>;
+  skills: string[];
+  [key: string]: any; // Allow for additional fields
+}
+
+// Add this type for keyword analysis
+interface KeywordAnalysis {
+  keyword: string;
+  found: boolean;
+  context?: string;
+  variations?: string[];
+}
+
+// Add these scoring weights
+const SCORING_WEIGHTS = {
+  BASE_FORMAT: 40,    // Base format score (40%)
+  KEYWORDS: 35,       // Keyword matching (35%)
+  REQUIREMENTS: 25    // Requirements matching (25%)
+};
+
+// Add this before getKeywordVariations
+const SKILL_VARIATIONS: Record<string, string[]> = {
+  // Programming Languages
+  "javascript": ["js", "es6", "es2015", "ecmascript", "vanilla javascript", "vanilla js"],
+  "typescript": ["ts", "typed js", "typed javascript"],
+  "python": ["py", "python3", "python2", "django", "flask"],
+  "java": ["j2ee", "java8", "java11", "spring", "spring boot"],
+  
+  // Frontend
+  "react": ["reactjs", "react.js", "react native", "react hooks", "redux"],
+  "angular": ["angular.js", "angularjs", "angular2+", "angular cli"],
+  "vue": ["vuejs", "vue.js", "vue3", "vuex", "vue router"],
+  
+  // Backend
+  "node.js": ["nodejs", "node", "express.js", "expressjs", "npm"],
+  "sql": ["mysql", "postgresql", "oracle sql", "sql server", "tsql"],
+  "nosql": ["mongodb", "dynamodb", "cassandra", "couchdb"],
+  
+  // Cloud & DevOps
+  "aws": ["amazon web services", "ec2", "s3", "lambda", "cloudfront"],
+  "docker": ["containerization", "docker-compose", "kubernetes", "k8s"],
+  "ci/cd": ["continuous integration", "continuous deployment", "jenkins", "gitlab ci"],
+  
+  // Design
+  "figma": ["figma design", "figma prototyping", "figma components"],
+  "adobe xd": ["xd", "adobe experience design"],
+  "ui/ux": ["user interface", "user experience", "ux design", "ui design"],
+  
+  // Common Skills
+  "agile": ["scrum", "kanban", "sprint planning", "agile methodologies"],
+  "git": ["github", "gitlab", "bitbucket", "version control"],
+  "api": ["rest api", "graphql", "soap", "api development", "swagger"],
+};
+
+// Update getKeywordVariations to use the SKILL_VARIATIONS
+const getKeywordVariations = (keyword: string): string[] => {
+  const variations: string[] = [];
+  const keywordLower = keyword.toLowerCase();
+  
+  // Add predefined variations if they exist
+  if (SKILL_VARIATIONS[keywordLower]) {
+    variations.push(...SKILL_VARIATIONS[keywordLower]);
+  }
+  
+  // Add common variations
+  variations.push(
+    keywordLower,
+    keywordLower.replace(/\s/g, ''),
+    keywordLower.replace(/\./g, ''),
+    keywordLower.replace(/-/g, ''),
+    keywordLower.replace(/\s/g, '-'),
+    keywordLower.replace(/\s/g, '_')
+  );
+  
+  // Add variations with/without common prefixes/suffixes
+  const prefixes = ['experienced in', 'skilled in', 'proficient in', 'knowledge of'];
+  const suffixes = ['development', 'programming', 'engineering'];
+  
+  prefixes.forEach(prefix => {
+    variations.push(`${prefix} ${keywordLower}`);
+  });
+  
+  suffixes.forEach(suffix => {
+    if (!keywordLower.includes(suffix)) {
+      variations.push(`${keywordLower} ${suffix}`);
+    }
+  });
+  
+  return [...new Set(variations)]; // Remove duplicates
+};
+
+// Update analyzeKeywordMatch for better accuracy
+const analyzeKeywordMatch = (content: string, keyword: string): { found: boolean; relevance: number } => {
+  const contentLower = content.toLowerCase();
+  const keywordLower = keyword.toLowerCase();
+  
+  // Check for exact match with word boundaries
+  const exactRegex = new RegExp(`\\b${keywordLower}\\b`, 'i');
+  if (exactRegex.test(content)) {
+    return { found: true, relevance: 1.0 };
+  }
+  
+  // Check variations with context awareness
+  const variations = getKeywordVariations(keywordLower);
+  for (const variation of variations) {
+    const variationRegex = new RegExp(`\\b${variation}\\b`, 'i');
+    if (variationRegex.test(content)) {
+      // Higher relevance for predefined variations
+      const isPredefVariation = SKILL_VARIATIONS[keywordLower]?.includes(variation);
+      return { found: true, relevance: isPredefVariation ? 0.9 : 0.8 };
+    }
+  }
+  
+  // Check for compound matches (e.g., "React Native" as separate words)
+  const parts = keywordLower.split(/[\s.-]+/);
+  if (parts.length > 1) {
+    const allPartsFound = parts.every(part => 
+      new RegExp(`\\b${part}\\b`, 'i').test(content)
+    );
+    if (allPartsFound) {
+      return { found: true, relevance: 0.7 };
+    }
+    
+    // Partial matches for compound terms
+    const somePartsFound = parts.some(part => 
+      new RegExp(`\\b${part}\\b`, 'i').test(content)
+    );
+    if (somePartsFound) {
+      return { found: true, relevance: 0.4 };
+    }
+  }
+  
+  return { found: false, relevance: 0 };
 };
 
 const Index = () => {
   const { toast } = useToast();
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
-  const [resumeData, setResumeData] = useState(templates.split);
+  const [resumeData, setResumeData] = useState<ResumeData>(templates.split);
   const [atsScore, setAtsScore] = useState<number | null>(null);
   const [atsLoading, setAtsLoading] = useState(false);
   const [atsResults, setAtsResults] = useState<{
@@ -142,6 +313,9 @@ const Index = () => {
   } | null>(null);
   const [selectedProfile, setSelectedProfile] = useState<string>("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const [isLearnMoreOpen, setIsLearnMoreOpen] = useState(false);
 
   const handleTemplateSelect = (templateId: string) => {
     setSelectedTemplate(templateId);
@@ -153,7 +327,7 @@ const Index = () => {
   };
 
   const handleChange = (section: string, field: string, value: any) => {
-    setResumeData((prev) => {
+    setResumeData((prev: ResumeData) => {
       const newData = { ...prev };
       
       // Handle special cases
@@ -164,6 +338,15 @@ const Index = () => {
       
       if (section === "skills" && field === "list") {
         newData.skills = value.split(",").map((skill: string) => skill.trim());
+        return newData;
+      }
+
+      // Handle personal information fields
+      if (section === "personalInfo") {
+        newData.personalInfo = {
+          ...newData.personalInfo,
+          [field]: value
+        };
         return newData;
       }
 
@@ -187,7 +370,7 @@ const Index = () => {
   };
 
   const handleAddSection = (section: "experience" | "education") => {
-    setResumeData((prev) => ({
+    setResumeData((prev: ResumeData) => ({
       ...prev,
       [section]: [
         ...prev[section],
@@ -225,67 +408,69 @@ const Index = () => {
         return;
       }
 
-      // Simulate file reading and content extraction
       const reader = new FileReader();
       
-      reader.onload = async (e) => {
+      reader.onload = async (e: ProgressEvent<FileReader>) => {
         try {
-          // Get the file content
           const content = e.target?.result as string;
-          
-          // Clean the content by removing special characters and normalizing whitespace
           const cleanedContent = content
-            .replace(/[\x00-\x1F\x7F-\x9F]/g, '') // Remove control characters
-            .replace(/\s+/g, ' ') // Normalize whitespace
+            .replace(/[\x00-\x1F\x7F-\x9F]/g, '')
+            .replace(/\s+/g, ' ')
             .trim();
           
-          // Validate if it's actually a resume
-          const validation = validateResumeContent(cleanedContent);
-          
-          if (!validation.isValid) {
-            toast({
-              title: "Invalid Resume",
-              description: validation.error || "The uploaded file doesn't appear to be a resume. Please check the content and try again.",
-              variant: "destructive",
-            });
-            setAtsLoading(false);
-            return;
-          }
-
-          // If validation passes, continue with the analysis
           const profile = JOB_PROFILES[selectedProfile];
           
-          // Mock analysis - Replace with actual analysis logic
-          const mockKeywordMatches = profile.keywords
-            .filter(() => Math.random() > 0.3);
-          const mockKeywordMissing = profile.keywords
-            .filter(k => !mockKeywordMatches.includes(k));
+          // Enhanced keyword analysis
+          const keywordAnalysis = profile.keywords.map(keyword => {
+            const analysis = analyzeKeywordMatch(cleanedContent, keyword);
+            
+            // Get surrounding context if found
+            let context = '';
+            if (analysis.found) {
+              const keywordIndex = cleanedContent.toLowerCase().indexOf(keyword.toLowerCase());
+              if (keywordIndex !== -1) {
+                const start = Math.max(0, keywordIndex - 50);
+                const end = Math.min(cleanedContent.length, keywordIndex + keyword.length + 50);
+                context = cleanedContent.slice(start, end).trim();
+              }
+            }
+
+            return {
+              keyword,
+              found: analysis.found,
+              relevance: analysis.relevance,
+              context: context || undefined
+            };
+          });
+
+          // Calculate scores
+          const formatScore = calculateFormatScore(content);
           
-          const formatScore = Math.floor(Math.random() * 30) + 70;
-          const keywordScore = (mockKeywordMatches.length / profile.keywords.length) * 100;
-          const requirementScore = Math.floor(Math.random() * 40) + 60;
+          // Calculate keyword score (out of 35%)
+          const totalRelevance = keywordAnalysis.reduce((sum, k) => sum + k.relevance, 0);
+          const maxPossibleRelevance = profile.keywords.length;
+          const keywordScore = (totalRelevance / maxPossibleRelevance) * SCORING_WEIGHTS.KEYWORDS;
           
-          const totalScore = Math.floor((formatScore + keywordScore + requirementScore) / 3);
+          // Calculate requirement score (out of 25%)
+          const requirementScore = calculateRequirementScore(cleanedContent, profile.requirements);
+          
+          // Calculate total score
+          const totalScore = Math.round(formatScore + keywordScore + requirementScore);
 
           const mockResults = {
             score: totalScore,
-            matches: mockKeywordMatches,
-            missing: mockKeywordMissing,
-            formatScore,
-            formatFeedback: [
-              "Good use of bullet points",
-              "Clear section headings",
-              "Improve spacing between sections",
-              "Consider using a more standard font"
-            ],
-            keywordScore,
-            requirementScore,
-            improvements: [
-              "Add more quantifiable achievements",
-              "Include relevant certifications",
-              "Highlight specific technologies used in projects",
-              "Add a brief professional summary"
-            ]
+            matches: keywordAnalysis
+              .filter(k => k.found)
+              .sort((a, b) => b.relevance - a.relevance)
+              .map(k => k.keyword),
+            missing: keywordAnalysis
+              .filter(k => !k.found)
+              .map(k => k.keyword),
+            formatScore: Math.round(formatScore), // This will always be at least 40%
+            formatFeedback: generateFormatFeedback(content),
+            keywordScore: Math.round((keywordScore / SCORING_WEIGHTS.KEYWORDS) * 100),
+            requirementScore: Math.round((requirementScore / SCORING_WEIGHTS.REQUIREMENTS) * 100),
+            improvements: generateImprovements(keywordAnalysis, profile)
           };
           
           setAtsResults(mockResults);
@@ -320,7 +505,88 @@ const Index = () => {
     }
   };
 
-  const ATSScanner = () => (
+  const calculateRequirementScore = (content: string, requirements: string[]): number => {
+    const maxScore = SCORING_WEIGHTS.REQUIREMENTS;
+    let score = 0;
+    
+    requirements.forEach(req => {
+      const reqLower = req.toLowerCase();
+      // Look for requirement phrases and related terms
+      if (content.includes(reqLower)) {
+        score += maxScore / requirements.length;
+      }
+    });
+    
+    return score;
+  };
+
+  const calculateFormatScore = (content: string): number => {
+    // Start with base score of 40%
+    let score = SCORING_WEIGHTS.BASE_FORMAT;
+    const maxBonusScore = 20; // Additional 20% possible for excellent formatting
+    let bonusScore = maxBonusScore;
+    
+    // Check for proper sections (can only reduce the bonus score)
+    if (!/education|academic|qualification/i.test(content)) bonusScore -= 4;
+    if (!/experience|employment|work history/i.test(content)) bonusScore -= 4;
+    if (!/skills|expertise|competencies/i.test(content)) bonusScore -= 4;
+    
+    // Check formatting
+    if (!/\n\n|\r\n\r\n/.test(content)) bonusScore -= 3; // Proper spacing
+    if (/\n{4,}/.test(content)) bonusScore -= 3; // Excessive spacing
+    if (!/[A-Z][A-Za-z\s]*:?\n/.test(content)) bonusScore -= 2; // Section headers
+    
+    // Add bonus score to base score
+    score += Math.max(0, bonusScore);
+    
+    return score;
+  };
+
+  const generateFormatFeedback = (content: string): string[] => {
+    const feedback = [];
+    
+    if (!/\n\n|\r\n\r\n/.test(content)) {
+      feedback.push("Improve spacing between sections for better readability");
+    }
+    if (/\n{4,}/.test(content)) {
+      feedback.push("Reduce excessive spacing between sections");
+    }
+    if (!/[A-Z][A-Za-z\s]*:?\n/.test(content)) {
+      feedback.push("Add clear section headers");
+    }
+    
+    return feedback;
+  };
+
+  const generateImprovements = (
+    keywordAnalysis: KeywordAnalysis[], 
+    profile: JobProfile
+  ): string[] => {
+    const improvements = [];
+    
+    // Suggest missing keywords
+    const missingKeywords = keywordAnalysis.filter(k => !k.found);
+    if (missingKeywords.length > 0) {
+      improvements.push(
+        `Add missing keywords: ${missingKeywords.slice(0, 3).map(k => k.keyword).join(", ")}`
+      );
+    }
+    
+    // Add profile-specific suggestions
+    if (profile.title.toLowerCase().includes("developer")) {
+      improvements.push("Include specific technical project examples");
+      improvements.push("Highlight your GitHub profile or portfolio");
+    }
+    
+    if (profile.title.toLowerCase().includes("designer")) {
+      improvements.push("Include links to your design portfolio");
+      improvements.push("Mention specific design tools and methodologies");
+    }
+    
+    return improvements;
+  };
+
+  const ATSScanner: React.FC = () => (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" className="gap-2" onClick={() => setIsDialogOpen(true)}>
@@ -328,7 +594,7 @@ const Index = () => {
           ATS Scanner
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px]" onInteractOutside={(e) => e.preventDefault()}>
+      <DialogContent className="sm:max-w-[600px] w-[95vw] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>ATS Resume Scanner</DialogTitle>
         </DialogHeader>
@@ -381,17 +647,25 @@ const Index = () => {
                 </div>
               ) : (
                 <>
-                  {/* Overall Score */}
+                  {/* Overall Score with Success Message */}
                   <div className="space-y-2">
                     <div className="flex justify-between items-center">
                       <span className="text-lg font-medium">Overall ATS Score</span>
                       <span className="text-2xl font-bold text-blue-600">{atsResults.score}%</span>
                     </div>
                     <Progress value={atsResults.score} className="h-2" />
+                    <div className={`mt-2 text-sm ${atsResults.score >= 50 ? 'text-green-600' : 'text-yellow-600'} font-medium`}>
+                      {atsResults.score >= 50 
+                        ? "🎉 Congratulations! Your resume is ATS-friendly and likely to pass through most ATS systems."
+                        : "Your resume might need improvements to better pass ATS systems. Follow the suggestions below."}
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Note: A score above 50% indicates your resume is optimized for most ATS software.
+                    </p>
                   </div>
 
                   {/* Detailed Scores */}
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div className="p-4 bg-gray-50 rounded-lg">
                       <div className="text-sm font-medium">Format Score</div>
                       <div className="text-xl font-bold text-green-600">{atsResults.formatScore}%</div>
@@ -487,120 +761,122 @@ const Index = () => {
     </Dialog>
   );
 
+  const LearnMoreDialog = () => (
+    <Dialog open={isLearnMoreOpen} onOpenChange={setIsLearnMoreOpen}>
+      <DialogContent className="sm:max-w-[600px]">
+        <DialogHeader>
+          <DialogTitle className="text-2xl font-bold">Welcome to ResumeGuide</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4 py-4">
+          <div className="space-y-2">
+            <h3 className="text-lg font-semibold text-blue-600">Key Features</h3>
+            <ul className="list-disc pl-5 space-y-2">
+              <li>Professional Resume Templates</li>
+              <li>AI-Powered Cover Letter Generator</li>
+              <li>ATS Resume Scanner</li>
+              <li>Real-time Preview</li>
+              <li>Easy Export Options</li>
+            </ul>
+              </div>
+
+          <div className="space-y-2">
+            <h3 className="text-lg font-semibold text-blue-600">How It Works</h3>
+            <ol className="list-decimal pl-5 space-y-2">
+              <li>Choose a professional template</li>
+              <li>Fill in your details</li>
+              <li>Customize the design</li>
+              <li>Download or share your resume</li>
+            </ol>
+          </div>
+
+                <Button
+            className="w-full mt-4"
+            onClick={() => {
+              setIsLearnMoreOpen(false);
+              navigate('/templates');
+              toast({
+                title: "Welcome to ResumeGuide! 🎉",
+                description: "Let's create your professional resume together.",
+                duration: 5000,
+                position: "top-center",
+                className: "bg-gradient-to-r from-blue-500 to-indigo-500 text-white",
+                style: {
+                  animation: "slideIn 0.5s ease-out",
+                },
+                type: "success",
+              });
+            }}
+          >
+            Get Started Now
+                </Button>
+              </div>
+      </DialogContent>
+    </Dialog>
+  );
+
   if (!selectedTemplate) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-indigo-100">
-        <nav className="fixed top-0 w-full bg-white/80 backdrop-blur-md shadow-sm z-50">
-          <div className="container mx-auto px-4">
-            <div className="flex items-center justify-between h-16">
-              <div className="flex items-center">
-                <a href="/" className="flex items-center">
-                  <svg
-                    className="h-8 w-8 text-blue-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                    />
-                  </svg>
-                  <span className="ml-2 text-xl font-bold text-gray-900">ResumeBuilder</span>
-                </a>
-              </div>
-
-              <NavigationMenu className="hidden md:flex">
-                <NavigationMenuList className="flex gap-6">
-                  <NavigationMenuItem>
-                    <NavigationMenuLink
-                      className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
-                      href="#templates"
-                    >
-                      Templates
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
-                  <NavigationMenuItem>
-                    <NavigationMenuLink
-                      className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
-                      href="#features"
-                    >
-                      Features
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
-                  <NavigationMenuItem>
-                    <NavigationMenuLink
-                      className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
-                      href="#pricing"
-                    >
-                      Pricing
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
-                </NavigationMenuList>
-              </NavigationMenu>
-
-              <div className="flex items-center gap-4">
-                <ATSScanner />
-                <a
-                  href="https://github.com/yourusername/resumebuilder"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-700 hover:text-blue-600 transition-colors"
-                >
-                  <Github className="h-5 w-5" />
-                </a>
-                <Button
-                  variant="ghost"
-                  className="hidden md:inline-flex"
-                  onClick={() => document.getElementById('templates')?.scrollIntoView({ behavior: 'smooth' })}
-                >
-                  Get Started
-                </Button>
-                <Button
-                  className="bg-blue-600 text-white hover:bg-blue-700"
-                >
-                  Sign In
-                </Button>
-              </div>
-            </div>
-          </div>
-        </nav>
-
-        <header className="relative bg-cover bg-center h-screen pt-16">
+      <>
+        <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-indigo-100">
+          <Navbar />
+          {/* Responsive Header */}
+          <header className="relative flex items-center justify-center min-h-screen w-full">
+            {/* Background gradient */}
           <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-blue-600 opacity-70"></div>
-          <div className="relative container mx-auto text-center px-4 flex flex-col justify-center items-center h-full">
-            <h1 className="text-6xl md:text-7xl font-extrabold mb-6 tracking-wide text-white animate__animated animate__fadeIn">
-              <span className="block">Craft Your Dream</span>
-              <span className="block mt-2 animate__animated animate__fadeIn animate__delay-1s">Resume</span>
+            
+            {/* Content container */}
+            <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] mt-16">
+              {/* Text content */}
+              <div className="text-center w-full max-w-3xl mx-auto">
+                <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-wide text-white">
+                  <span className="block mb-2">Craft Your Dream</span>
+                  <span className="block">Resume</span>
             </h1>
-            <p className="text-lg md:text-2xl text-gray-200 mb-10 max-w-3xl mx-auto animate__animated animate__fadeIn animate__delay-2s">
-              Transform your job applications with stunning and professional resumes that leave a lasting impression.
+                
+                <p className="mt-6 text-base md:text-lg lg:text-2xl text-gray-200 max-w-2xl mx-auto">
+                  Transform your job applications with stunning and professional resumes.
             </p>
-            <div className="flex gap-6 animate__animated animate__fadeIn animate__delay-3s">
+                
+                <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
               <Button 
-                className="px-8 py-3 text-lg bg-white text-blue-700 hover:bg-blue-100 transition-all duration-300 transform hover:scale-105"
-                onClick={() => document.getElementById('templates')?.scrollIntoView({ behavior: 'smooth' })}
+                    className="w-full sm:w-auto px-8 py-3 text-lg bg-white text-blue-700 hover:bg-gray-100"
+                    onClick={() => {
+                      toast({
+                        title: "Welcome to ResumeGuide! 🎉",
+                        description: "Let's create your professional resume together.",
+                        duration: 5000,
+                        position: "top-center",
+                        className: "bg-gradient-to-r from-blue-500 to-indigo-500 text-white",
+                        style: {
+                          animation: "slideIn 0.5s ease-out",
+                        },
+                        type: "success",
+                      });
+                    }}
               >
                 Get Started
               </Button>
-              <Button className="px-8 py-3 text-lg bg-blue-700 text-white hover:bg-blue-800 transition-all duration-300 transform hover:scale-105">
+                  <Button 
+                    className="w-full sm:w-auto px-8 py-3 text-lg bg-blue-700 text-white hover:bg-blue-800"
+                    onClick={() => setIsLearnMoreOpen(true)}
+                  >
                 Learn More
               </Button>
+                </div>
             </div>
           </div>
         </header>
 
+          {/* Responsive Templates Grid */}
         <div id="templates" className="container mx-auto py-16 px-4">
-          <h2 className="text-4xl font-bold text-center mb-4 text-gray-800 animate__animated animate__fadeIn">
+            <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
             Pick Your Favorite Template
           </h2>
-          <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto animate__animated animate__fadeIn animate__delay-1s">
-            Choose from our professionally designed templates to create your perfect resume. Each template is fully customizable to match your style.
+            <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+              Choose from our professionally designed templates.
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {Object.entries(templates).map(([id, template]) => (
               <Card
                 key={id}
@@ -652,8 +928,8 @@ const Index = () => {
             ))}
           </div>
           
-          {/* Template Features Section */}
-          <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            {/* Responsive Features Grid */}
+            <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
             <div className="p-6 rounded-xl bg-white/50 backdrop-blur-sm">
               <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -684,20 +960,196 @@ const Index = () => {
           </div>
         </div>
 
-        <footer className="bg-gray-900 text-white py-12 text-center">
-          <p className="text-sm animate__animated animate__fadeIn">
-            Crafted with ❤️ | Build your future with a resume that stands out!
-          </p>
+          <div className="absolute bottom-0 left-0 right-0 bg-blue-800/80 backdrop-blur-sm py-3 animate__animated animate__fadeInUp">
+            <div className="container mx-auto">
+              <div className="flex items-center justify-center gap-4">
+                <div className="relative overflow-hidden w-full">
+                  <div className="animate-marquee whitespace-nowrap flex items-center gap-8">
+                    <span className="text-white flex items-center gap-2">
+                      <span className="bg-green-500 text-white px-2 py-0.5 rounded text-sm font-medium">NEW</span>
+                      Join our WhatsApp group for daily job updates and career tips! 
+                      <a 
+                        href="https://whatsapp.com/channel/your-group-link" 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="inline-flex items-center gap-1 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium hover:bg-green-600 transition-colors"
+                      >
+                        <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                        </svg>
+                        Join Now
+                      </a>
+                    </span>
+                    {/* Duplicate the content for seamless loop */}
+                    <span className="text-white flex items-center gap-2">
+                      <span className="bg-green-500 text-white px-2 py-0.5 rounded text-sm font-medium">NEW</span>
+                      Join our WhatsApp group for daily job updates and career tips! 
+                      <a 
+                        href="https://whatsapp.com/channel/your-group-link" 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="inline-flex items-center gap-1 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium hover:bg-green-600 transition-colors"
+                      >
+                        <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                        </svg>
+                        Join Now
+                      </a>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <footer className="bg-gradient-to-b from-gray-900 to-gray-950 text-white pt-16 pb-8">
+            <div className="container mx-auto px-4">
+              {/* Footer Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+                {/* Company Info */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <svg
+                      className="h-8 w-8 text-blue-500"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                      />
+                    </svg>
+                    <span className="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+                      ResumeGuide
+                    </span>
+                  </div>
+                  <p className="text-gray-400 text-sm">
+                    Empowering careers through intelligent resume creation. Built with ❤️ by Codium.
+                  </p>
+                  <div className="flex gap-4">
+                    <a href="#" className="text-gray-400 hover:text-blue-500 transition-colors">
+                      <Github className="h-5 w-5" />
+                    </a>
+                    <a href="#" className="text-gray-400 hover:text-blue-500 transition-colors">
+                      <Twitter className="h-5 w-5" />
+                    </a>
+                    <a href="#" className="text-gray-400 hover:text-blue-500 transition-colors">
+                      <Linkedin className="h-5 w-5" />
+                    </a>
+                  </div>
+                </div>
+
+                {/* Quick Links */}
+                <div>
+                  <h3 className="text-lg font-semibold mb-4 text-gray-200">Quick Links</h3>
+                  <ul className="space-y-2">
+                    <li>
+                      <Link to="/templates" className="text-gray-400 hover:text-blue-400 transition-colors text-sm">
+                        Resume Templates
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/cover-letter" className="text-gray-400 hover:text-blue-400 transition-colors text-sm">
+                        Cover Letter Builder
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/blog" className="text-gray-400 hover:text-blue-400 transition-colors text-sm">
+                        Career Blog
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Resources */}
+                <div>
+                  <h3 className="text-lg font-semibold mb-4 text-gray-200">Resources</h3>
+                  <ul className="space-y-2">
+                    <li>
+                      <Link to="/resume-guide" className="text-gray-400 hover:text-blue-400 transition-colors text-sm">
+                        Resume Writing Guide
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/career-advice" className="text-gray-400 hover:text-blue-400 transition-colors text-sm">
+                        Career Advice
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/interview-tips" className="text-gray-400 hover:text-blue-400 transition-colors text-sm">
+                        Interview Tips
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/job-search" className="text-gray-400 hover:text-blue-400 transition-colors text-sm">
+                        Job Search Strategy
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Newsletter */}
+                <div>
+                  <h3 className="text-lg font-semibold mb-4 text-gray-200">Stay Updated</h3>
+                  <p className="text-sm text-gray-400 mb-4">
+                    Get the latest career tips and tricks delivered to your inbox.
+                  </p>
+                  <div className="flex gap-2">
+                    <Input
+                      type="email"
+                      placeholder="Enter your email"
+                      className="bg-gray-800 border-gray-700 text-sm"
+                    />
+                    <Button variant="default" size="sm" className="bg-blue-600 hover:bg-blue-700">
+                      Subscribe
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Divider */}
+              <div className="border-t border-gray-800 pt-8">
+                <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+                  {/* Copyright */}
+                  <div className="text-sm text-gray-400">
+                    © {new Date().getFullYear()} ResumeGuide by{" "}
+                    <a href="#" className="text-blue-400 hover:text-blue-300">
+                      Codium
+                    </a>
+                    . All rights reserved.
+                  </div>
+
+                  {/* Legal Links */}
+                  <div className="flex gap-6">
+                    <a href="#" className="text-sm text-gray-400 hover:text-blue-400 transition-colors">
+                      Privacy Policy
+                    </a>
+                    <a href="#" className="text-sm text-gray-400 hover:text-blue-400 transition-colors">
+                      Terms of Service
+                    </a>
+                    <a href="#" className="text-sm text-gray-400 hover:text-blue-400 transition-colors">
+                      Contact Us
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
         </footer>
       </div>
+        <LearnMoreDialog />
+      </>
     );
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-indigo-100">
+      <Navbar />
       <header className="bg-gradient-to-r from-blue-500 to-blue-700 text-white p-6 shadow-md">
         <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-3xl font-bold">Resume Builder</h1>
+          <h1 className="text-3xl font-bold">Resume Guide</h1>
           <Button
             variant="secondary"
             onClick={() => setSelectedTemplate(null)}
