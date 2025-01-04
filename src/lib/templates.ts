@@ -1,30 +1,5 @@
 export const templates = {
-  modern: {
-    photo: "",
-    personalInfo: {
-      fullName: "John Doe",
-      email: "john@example.com",
-      phone: "+1 234 567 890",
-      location: "New York, USA"
-    },
-    summary: "Experienced professional with a track record of success in project management and team leadership.",
-    experience: [
-      {
-        company: "Tech Solutions Inc.",
-        position: "Senior Project Manager",
-        duration: "2020 - Present",
-        description: "Led cross-functional teams in delivering complex software projects. Improved project delivery efficiency by 30%.",
-      },
-    ],
-    education: [
-      {
-        institution: "University of Technology",
-        degree: "Bachelor of Science in Computer Science",
-        year: "2016",
-      },
-    ],
-    skills: ["Project Management", "Team Leadership", "Strategic Planning", "Agile Methodologies"],
-  },
+
   split: {
     photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80",
     personalInfo: {
